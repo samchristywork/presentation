@@ -48,5 +48,24 @@ void draw_centered_text(cairo_t *cr, const char *text, double size, double x,
   cairo_show_text(cr, text);
 }
 
+void write_image(cairo_t *cr) {
+  char *filename = malloc(100);
+  sprintf(filename, "output/%03d.png", currentSlide);
+  cairo_surface_write_to_png(cairo_get_target(cr), filename);
+  currentSlide++;
+}
+
+void title_slide(cairo_t *cr, const char *title) {
+  double centerX = screenWidth / 2;
+  double centerY = screenHeight / 2;
+
+  set_defaults(cr);
+  clear_screen(cr, 1.0, 0.9, 1.0);
+  cairo_set_source_rgb(cr, 0.0, 0.0, 0.3);
+  draw_centered_text(cr, title, 200, centerX, centerY);
+
+  write_image(cr);
+}
+
 int main() {
 }
