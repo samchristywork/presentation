@@ -31,5 +31,22 @@ bool make_directory_if_not_exists(const char *dir) {
   return true;
 }
 
+void draw_text(cairo_t *cr, const char *text, double size, double x, double y) {
+  cairo_set_font_size(cr, size);
+  cairo_move_to(cr, x, y);
+  cairo_show_text(cr, text);
+}
+
+void draw_centered_text(cairo_t *cr, const char *text, double size, double x,
+                        double y) {
+  cairo_set_font_size(cr, size);
+
+  cairo_text_extents_t extents;
+  cairo_text_extents(cr, text, &extents);
+  cairo_move_to(cr, x - extents.width / 2 - extents.x_bearing,
+                y - extents.height / 2 - extents.y_bearing);
+  cairo_show_text(cr, text);
+}
+
 int main() {
 }
