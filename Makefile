@@ -14,6 +14,18 @@ build/%.o: src/%.c
 build/presentation: objects
 	${CC} build/*.o ${LIBS} -o $@
 
+.PHONY: run
+run: build/presentation
+	./build/presentation
+
+.PHONY: debug
+debug: clean build/presentation
+	gdb ./build/presentation
+
+.PHONY: watch
+watch:
+	ls src/*.c | entr make run
+
 .PHONY: clean
 clean:
 	rm -rf build
