@@ -67,5 +67,34 @@ void title_slide(cairo_t *cr, const char *title) {
   write_image(cr);
 }
 
+void image_slide(cairo_t *cr, const char *filename) {
+  cairo_surface_t *image = cairo_image_surface_create_from_png(filename);
+  if (cairo_surface_status(image) != CAIRO_STATUS_SUCCESS) {
+    fprintf(stderr, "Failed to load image\n");
+    return;
+  }
+
+  double margin = 0.1;
+
+  double imageWidth = cairo_image_surface_get_width(image);
+  double imageHeight = cairo_image_surface_get_height(image);
+
+  double targetWidth = screenWidth * (1 - 2 * margin);
+  double targetHeight = screenHeight * (1 - 2 * margin);
+
+  clear_screen(cr, 1.0, 0.9, 1.0);
+
+  cairo_save(cr);
+  cairo_translate(cr, screenWidth * margin, screenHeight * margin);
+  cairo_scale(cr, targetWidth / imageWidth, targetHeight / imageHeight);
+  cairo_set_source_surface(cr, image, 0, 0);
+  cairo_paint(cr);
+  cairo_restore(cr);
+
+  write_image(cr);
+
+  cairo_surface_destroy(image);
+}
+
 int main() {
 }
