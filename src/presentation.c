@@ -96,5 +96,26 @@ void image_slide(cairo_t *cr, const char *filename) {
   cairo_surface_destroy(image);
 }
 
+void bullet_slide(cairo_t *cr, const char *title, ...) {
+  va_list args;
+  va_start(args, title);
+
+  set_defaults(cr);
+  clear_screen(cr, 1.0, 0.9, 1.9);
+  cairo_set_source_rgb(cr, 0.0, 0.0, 0.3);
+  draw_text(cr, title, 200, 100, 300);
+
+  double y = 400;
+  const char *bullet;
+  while ((bullet = va_arg(args, const char *)) != NULL) {
+    y += 150;
+    draw_text(cr, bullet, 100, 200, y);
+  }
+
+  write_image(cr);
+
+  va_end(args);
+}
+
 int main() {
 }
