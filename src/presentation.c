@@ -117,5 +117,22 @@ void bullet_slide(cairo_t *cr, const char *title, ...) {
   va_end(args);
 }
 
+cairo_t *init_cairo() {
+  cairo_surface_t *surface = cairo_image_surface_create(
+      CAIRO_FORMAT_ARGB32, screenWidth, screenHeight);
+  if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+    fprintf(stderr, "Failed to create surface\n");
+    return NULL;
+  }
+
+  cairo_t *cr = cairo_create(surface);
+  if (cairo_status(cr) != CAIRO_STATUS_SUCCESS) {
+    fprintf(stderr, "Failed to create cairo context\n");
+    return NULL;
+  }
+
+  return cr;
+}
+
 int main() {
 }
