@@ -9,6 +9,16 @@ double screenWidth = 1920;
 double screenHeight = 1080;
 #include "args.h"
 
+#define VERSION_STRING "args-1.0.0"
+
+#define LICENSE_STRING                                                         \
+  "Copyright (C) 2024 Sam Christy.\n"                                          \
+  "License GPLv3+: GNU GPL version 3 or later "                                \
+  "<http://gnu.org/licenses/gpl.html>\n"                                       \
+  "\n"                                                                         \
+  "This is free software; you are free to change and redistribute it.\n"       \
+  "There is NO WARRANTY, to the extent permitted by law."
+
 int currentSlide = 0;
 
 void clear_screen(cairo_t *cr, double r, double g, double b) {
@@ -142,7 +152,25 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  if (!make_directory_if_not_exists("output")) {
+  add_arg('h', "help", "Print this help message", ARG_NONE);
+  add_arg('v', "version", "Print the version number", ARG_NONE);
+  add_arg('o', "output", "Output directory", ARG_REQUIRED);
+
+  bool helpFlag = get_arg_bool(argc, argv, 'h', false);
+  bool versionFlag = get_arg_bool(argc, argv, 'v', false);
+  char *directory = get_arg_string(argc, argv, 'o', "output");
+
+  if (helpFlag) {
+    usage(argv[0]);
+    exit(EXIT_SUCCESS);
+  }
+
+  if (versionFlag) {
+    version(VERSION_STRING, LICENSE_STRING);
+    exit(EXIT_SUCCESS);
+  }
+
+  if (!make_directory_if_not_exists(directory)) {
     fprintf(stderr, "Failed to create output directory\n");
   }
 
