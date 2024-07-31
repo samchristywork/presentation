@@ -7,6 +7,8 @@
 
 double screenWidth = 1920;
 double screenHeight = 1080;
+#include "args.h"
+
 int currentSlide = 0;
 
 void clear_screen(cairo_t *cr, double r, double g, double b) {
@@ -134,5 +136,21 @@ cairo_t *init_cairo() {
   return cr;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+  cairo_t *cr = init_cairo();
+  if (cr == NULL) {
+    return 1;
+  }
+
+  if (!make_directory_if_not_exists("output")) {
+    fprintf(stderr, "Failed to create output directory\n");
+  }
+
+  title_slide(cr, "Hello, World!");
+  bullet_slide(cr, "Fizz", "• foo", "• bar", "• baz", NULL);
+  image_slide(cr, "image.png");
+  title_slide(cr, "Goodbye, World!");
+
+  cairo_destroy(cr);
+  cairo_surface_destroy(cairo_get_target(cr));
 }
