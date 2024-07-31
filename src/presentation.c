@@ -5,11 +5,9 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-double screenWidth = 1920;
-double screenHeight = 1080;
 #include "args.h"
 
-#define VERSION_STRING "args-1.0.0"
+#define VERSION_STRING "presentation-1.0.0"
 
 #define LICENSE_STRING                                                         \
   "Copyright (C) 2024 Sam Christy.\n"                                          \
@@ -19,6 +17,8 @@ double screenHeight = 1080;
   "This is free software; you are free to change and redistribute it.\n"       \
   "There is NO WARRANTY, to the extent permitted by law."
 
+double screenWidth;
+double screenHeight;
 int currentSlide = 0;
 
 void clear_screen(cairo_t *cr, double r, double g, double b) {
@@ -155,10 +155,15 @@ int main(int argc, char *argv[]) {
   add_arg('h', "help", "Print this help message", ARG_NONE);
   add_arg('v', "version", "Print the version number", ARG_NONE);
   add_arg('o', "output", "Output directory", ARG_REQUIRED);
+  add_arg('x', "width", "Screen width", ARG_REQUIRED);
+  add_arg('y', "height", "Screen height", ARG_REQUIRED);
 
   bool helpFlag = get_arg_bool(argc, argv, 'h', false);
   bool versionFlag = get_arg_bool(argc, argv, 'v', false);
   char *directory = get_arg_string(argc, argv, 'o', "output");
+
+  screenWidth = get_arg_int(argc, argv, 'x', 1920);
+  screenHeight = get_arg_int(argc, argv, 'y', 1080);
 
   if (helpFlag) {
     usage(argv[0]);
