@@ -147,11 +147,6 @@ cairo_t *init_cairo() {
 }
 
 int main(int argc, char *argv[]) {
-  cairo_t *cr = init_cairo();
-  if (cr == NULL) {
-    return 1;
-  }
-
   add_arg('h', "help", "Print this help message", ARG_NONE);
   add_arg('v', "version", "Print the version number", ARG_NONE);
   add_arg('o', "output", "Output directory", ARG_REQUIRED);
@@ -164,6 +159,11 @@ int main(int argc, char *argv[]) {
 
   screenWidth = get_arg_int(argc, argv, 'x', 1920);
   screenHeight = get_arg_int(argc, argv, 'y', 1080);
+
+  cairo_t *cr = init_cairo();
+  if (cr == NULL) {
+    return 1;
+  }
 
   if (helpFlag) {
     usage(argv[0]);
