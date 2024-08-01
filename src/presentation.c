@@ -1,4 +1,5 @@
 #include <cairo/cairo.h>
+#include <linux/limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -61,7 +62,7 @@ void draw_centered_text(cairo_t *cr, const char *text, double size, double x,
 }
 
 void write_image(cairo_t *cr) {
-  char *filename = malloc(100);
+  char *filename = malloc(PATH_MAX);
   sprintf(filename, "output/%03d.png", currentSlide);
   cairo_surface_write_to_png(cairo_get_target(cr), filename);
   currentSlide++;
