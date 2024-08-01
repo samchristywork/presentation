@@ -61,14 +61,14 @@ void draw_centered_text(cairo_t *cr, const char *text, double size, double x,
   cairo_show_text(cr, text);
 }
 
-void write_image(cairo_t *cr) {
+void write_image(cairo_t *cr, const char *outputDir) {
   char *filename = malloc(PATH_MAX);
-  sprintf(filename, "output/%03d.png", currentSlide);
+  sprintf(filename, "%s/%03d.png", outputDir, currentSlide);
   cairo_surface_write_to_png(cairo_get_target(cr), filename);
   currentSlide++;
 }
 
-void title_slide(cairo_t *cr, const char *title) {
+void title_slide(cairo_t *cr, const char *title, const char *outputDir) {
   double centerX = screenWidth / 2;
   double centerY = screenHeight / 2;
 
@@ -77,10 +77,10 @@ void title_slide(cairo_t *cr, const char *title) {
   cairo_set_source_rgb(cr, 0.0, 0.0, 0.3);
   draw_centered_text(cr, title, 200, centerX, centerY);
 
-  write_image(cr);
+  write_image(cr, outputDir);
 }
 
-void image_slide(cairo_t *cr, const char *filename) {
+void image_slide(cairo_t *cr, const char *filename, const char *outputDir) {
   cairo_surface_t *image = cairo_image_surface_create_from_png(filename);
   if (cairo_surface_status(image) != CAIRO_STATUS_SUCCESS) {
     fprintf(stderr, "Failed to load image\n");
@@ -104,14 +104,14 @@ void image_slide(cairo_t *cr, const char *filename) {
   cairo_paint(cr);
   cairo_restore(cr);
 
-  write_image(cr);
+  write_image(cr, outputDir);
 
   cairo_surface_destroy(image);
 }
 
-void bullet_slide(cairo_t *cr, const char *title, ...) {
+void bullet_slide(cairo_t *cr, const char *title, const char *outputDir, ...) {
   va_list args;
-  va_start(args, title);
+  va_start(args, outputDir);
 
   set_defaults(cr);
   clear_screen(cr, 1.0, 0.9, 1.9);
@@ -125,7 +125,7 @@ void bullet_slide(cairo_t *cr, const char *title, ...) {
     draw_text(cr, bullet, 100, 200, y);
   }
 
-  write_image(cr);
+  write_image(cr, outputDir);
 
   va_end(args);
 }
@@ -190,9 +190,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (line[0] == '#') {
-      title_slide(cr, line + 1);
+      title_slide(cr, line + 1, directory);
     } else if (line[0] == '!') {
-      image_slide(cr, line + 1);
+      image_slide(cr, line + 1, directory);
     }
   }
   free(line);
