@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
 
   cairo_t *cr = init_cairo();
   if (cr == NULL) {
-    return 1;
+    exit(EXIT_FAILURE);
   }
 
   if (helpFlag) {
@@ -180,10 +180,22 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Failed to create output directory\n");
   }
 
-  title_slide(cr, "Hello, World!");
-  bullet_slide(cr, "Fizz", "• foo", "• bar", "• baz", NULL);
-  image_slide(cr, "image.png");
-  title_slide(cr, "Goodbye, World!");
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  while ((read = getline(&line, &len, stdin)) != -1) {
+    if (line[read - 1] == '\n') {
+      line[read - 1] = '\0';
+    }
+
+    if (line[0] == '#') {
+      title_slide(cr, line + 1);
+    } else if (line[0] == '!') {
+      image_slide(cr, line + 1);
+    }
+  }
+  free(line);
 
   cairo_destroy(cr);
   cairo_surface_destroy(cairo_get_target(cr));
